@@ -191,4 +191,7 @@ export class CursFindManyInput {
 
     @Field(()=> DataSustinereCursInput, {nullable: true})
     datiSustinereCurs?: DataSustinereCursInput;
+
+    @Field(()=> FacultateFindByIdInput)
+    facultate: FacultateFindByIdInput;
 }

@@ -91,4 +91,54 @@ export class CursService {
             throw new InternalServerErrorException(err);
         }
     }
+
+    async stergereCurs(id: string) {
+        try {
+            const result = await this.cursModel.findByIdAndDelete(id).exec();
+            if (result) {
+                const facultateCurs = await this.facultateModel.findById(result.facultate).populate('cursuri').exec();
+                const cursuriActualizate = facultateCurs.cursuri.filter((curs)=> curs._id !== id);
+                await this.facultateModel.findByIdAndUpdate(result.facultate, {cursuri: cursuriActualizate});
+                return result;
+            }
+        }
+        catch(err) {
+            throw new InternalServerErrorException(err);
+        }
+    }
+
+    async stergereCursuri(inputCurs: CursFindManyInput) {
+        try {
+            let query = {};
+            if(inputCurs.nume) {
+                query['nume'] = inputCurs.nume;
+            }
+            if(inputCurs.anCurs) {
+                query['anCurs'] = inputCurs.anCurs;
+            }
+            if(inputCurs.tipCurs) {
+                query['tipCurs'] = inputCurs.tipCurs;
+            }
+            if(inputCurs.tipPrezentareCurs) {
+                query['tipPrezentareCurs'] = inputCurs.tipPrezentareCurs;
+            }
+            if(inputCurs.datiSustinereCurs.numarOra) {
+                query['datiSustinereCurs.numarOra'] = inputCurs.datiSustinereCurs.numarOra;
+            }
+            if(inputCurs.datiSustinereCurs.numarZi) {
+                query['datiSustinereCurs.numarZi'] = inputCurs.datiSustinereCurs.numarZi;
+            }
+            const result = await this.cursModel.deleteMany(query).exec();
+            if (result) {
+                const cursuriNoi = await this.cursModel.find({facultate: inputCurs.facultate._id}).exec();
+                const updateFacultate = cursuriNoi && await this.facultateModel.findByIdAndUpdate(inputCurs.facultate._id, {cursuri: cursuriNoi});
+                if (updateFacultate) {
+                    return cursuriNoi;
+                }
+            }
+        }
+        catch (err) {
+            throw new InternalServerErrorException(err);
+        }
+    }
 }

@@ -28,7 +28,7 @@ export class Rol {
 
     @Prop()
     @Field(()=> String)
-    tip: string;
+    tip: 'student' | 'profesor' | 'secretar' | 'admin';
 
     @Prop({type: S.Types.ObjectId, ref: 'User', required: true})
     @Field(()=> User)

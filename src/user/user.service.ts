@@ -17,7 +17,7 @@ export class UserService {
         }
     }
 
-    async creereUser(user: UserCreereInput,  tipRol: ('student' | 'profesor')) {
+    async creereUser(user: UserCreereInput,  tipRol: ('student' | 'profesor' | 'secretar' | 'admin')) {
         try {
             const dateUser = {nume: user.nume, numarTelefon: user.numarTelefon, eMail: user.eMail};
             const userNou = await this.userModel.create(dateUser);

@@ -30,8 +30,17 @@ export class CursResolver {
         return await this.cursService.creereCurs(curs);
     }
 
-    @Mutation(()=> Curs)
+    @Mutation(()=> CursuriWithoutNestedCursuri)
     async editareCurs(@Args('id') id: string, @Args('inputEditareCurs') inputEditareCurs: CursUpdateInput) {
-        return this.cursService.editareCurs(id, inputEditareCurs);
+        return await this.cursService.editareCurs(id, inputEditareCurs);
+    }
+
+    @Mutation(()=> CursuriWithoutNestedCursuri)
+    async stergereCurs(@Args('id') id: string) {
+        return await this.cursService.stergereCurs(id);
+    }
+    @Mutation(()=>[CursuriWithoutNestedCursuri])
+    async stergereCursuri(@Args('inputFindCursuri') inputFindCursuri: CursFindManyInput) {
+        return await this.cursService.stergereCursuri(inputFindCursuri);
     }
 }

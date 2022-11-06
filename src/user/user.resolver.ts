@@ -17,7 +17,7 @@ export class UserResolver {
     }
 
     @Mutation(()=>User)
-    async creereUser(@Args('user') user: UserCreereInput, @Args('rol') rol: ('student' | 'profesor')) {
+    async creereUser(@Args('user') user: UserCreereInput, @Args('rol') rol: ('student' | 'profesor' | 'secretar' | 'admin')) {
         return await this.userService.creereUser(user, rol);
     }
 }

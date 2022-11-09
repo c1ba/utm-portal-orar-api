@@ -1,19 +1,10 @@
-import {
-  Field,
-  ID,
-  InputType,
-  Int,
-  ObjectType,
-  PartialType,
-} from '@nestjs/graphql';
+import { Field, ID, InputType, Int, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema } from '@nestjs/mongoose';
 import mongoose, { Document, Schema as S } from 'mongoose';
 import {
   Facultate,
   FacultateFindByIdInput,
-  FacultateFindOneOrCreateInput,
   FacultateSchema,
-  FacultateWithoutCursuri,
   FacultateWithoutNestedFacultate,
 } from 'src/facultate/facultate.schema';
 

@@ -1,4 +1,4 @@
-import { Field, ID, InputType, ObjectType, PartialType } from '@nestjs/graphql';
+import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema } from '@nestjs/mongoose';
 import { Type } from 'class-transformer';
 import mongoose, { Document, Schema as S } from 'mongoose';

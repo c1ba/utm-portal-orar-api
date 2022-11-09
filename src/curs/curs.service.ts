@@ -117,7 +117,10 @@ export class CursService {
 
   async stergereCurs(id: string) {
     try {
-      const result = await this.cursModel.findByIdAndDelete(id).exec();
+      const result = await this.cursModel
+        .findByIdAndDelete(id)
+        .populate({ path: 'facultate', populate: { path: 'cursuri' } })
+        .exec();
       if (result) {
         const facultateCurs = await this.facultateModel
           .findById(result.facultate)

@@ -6,7 +6,12 @@ import { CursService } from './curs.service';
 import { FacultateSchema } from 'src/facultate/facultate.schema';
 
 @Module({
-    imports: [MongooseModule.forFeature([{name: 'Curs', schema: CursSchema}, {name: 'Facultate', schema: FacultateSchema}])],
-    providers: [CursService, CursResolver]
+  imports: [
+    MongooseModule.forFeature([
+      { name: 'Curs', schema: CursSchema },
+      { name: 'Facultate', schema: FacultateSchema },
+    ]),
+  ],
+  providers: [CursService, CursResolver],
 })
 export class CursModule {}

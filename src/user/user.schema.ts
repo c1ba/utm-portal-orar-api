@@ -1,7 +1,7 @@
 import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema } from '@nestjs/mongoose';
-import mongoose, { Document, Schema as S, Types } from 'mongoose';
-import { CreereRolInput, Rol, RolSchema } from 'src/rol/rol.schema';
+import mongoose, { Document, Schema as S } from 'mongoose';
+import { CreereRolInput, Rol } from 'src/rol/rol.schema';
 
 export const UserSchema = new mongoose.Schema(
   {

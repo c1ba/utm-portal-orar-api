@@ -37,7 +37,7 @@ export class FacultateService {
     try {
       const facultate = await this.facultateModel
         .findById(id)
-        .populate({ path: 'cursuri' })
+        .populate({ path: 'cursuri', populate: { path: 'profesorCurs' } })
         .exec();
       if (!facultate) {
         throw new NotFoundException('Facultate Negasita');

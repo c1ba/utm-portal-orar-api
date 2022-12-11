@@ -68,7 +68,7 @@ export class CursService {
             populate: [
               { path: 'profesorCurs' },
               { path: 'studentiPrezenti' },
-              { path: 'studentiAbsenti' },
+              { path: 'studentiAbsenti', populate: { path: 'student' } },
             ],
           },
         })
@@ -90,7 +90,7 @@ export class CursService {
           { path: 'facultate' },
           { path: 'profesorCurs' },
           { path: 'studentiPrezenti' },
-          { path: 'studentiAbsenti' },
+          { path: 'studentiAbsenti', populate: { path: 'student' } },
         ])
         .exec();
       if (!curs) {
@@ -137,7 +137,7 @@ export class CursService {
               populate: [
                 { path: 'profesorCurs' },
                 { path: 'studentiPrezenti' },
-                { path: 'studentiAbsenti' },
+                { path: 'studentiAbsenti', populate: { path: 'student' } },
               ],
             },
           },
@@ -162,7 +162,7 @@ export class CursService {
             populate: [
               { path: 'profesorCurs' },
               { path: 'studentiPrezenti' },
-              { path: 'studentiAbsenti' },
+              { path: 'studentiAbsenti', populate: { path: 'student' } },
             ],
           },
         })

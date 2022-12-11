@@ -24,7 +24,7 @@ export class FacultateService {
           populate: [
             { path: 'profesorCurs' },
             { path: 'studentiPrezenti' },
-            { path: 'studentiAbsenti' },
+            { path: 'studentiAbsenti', populate: { path: 'student' } },
           ],
         })
         .exec();
@@ -42,7 +42,7 @@ export class FacultateService {
         populate: [
           { path: 'profesorCurs' },
           { path: 'studentiPrezenti' },
-          { path: 'studentiAbsenti' },
+          { path: 'studentiAbsenti', populate: { path: 'student' } },
         ],
       });
     } catch (err) {
@@ -59,7 +59,7 @@ export class FacultateService {
           populate: [
             { path: 'profesorCurs' },
             { path: 'studentiPrezenti' },
-            { path: 'studentiAbsenti' },
+            { path: 'studentiAbsenti', populate: { path: 'student' } },
           ],
         })
         .exec();

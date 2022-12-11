@@ -61,7 +61,17 @@ export class CursService {
     try {
       const curs = await this.cursModel
         .findById(id)
-        .populate({ path: 'facultate', populate: { path: 'cursuri' } })
+        .populate({
+          path: 'facultate',
+          populate: {
+            path: 'cursuri',
+            populate: [
+              { path: 'profesorCurs' },
+              { path: 'studentiPrezenti' },
+              { path: 'studentiAbsenti', populate: { path: 'student' } },
+            ],
+          },
+        })
         .exec();
       if (!curs) {
         throw new NotFoundException(`Userul Nu a fost Gasit`);
@@ -76,6 +86,12 @@ export class CursService {
     try {
       const curs = await this.cursModel
         .findByIdAndUpdate(id, { $set: inputEditareCurs }, { new: true })
+        .populate([
+          { path: 'facultate' },
+          { path: 'profesorCurs' },
+          { path: 'studentiPrezenti' },
+          { path: 'studentiAbsenti', populate: { path: 'student' } },
+        ])
         .exec();
       if (!curs) {
         throw new NotFoundException(`Userul Nu a Fost Gasit`);
@@ -101,20 +117,34 @@ export class CursService {
       if (inputCurs.tipPrezentareCurs) {
         query['tipPrezentareCurs'] = inputCurs.tipPrezentareCurs;
       }
-      if (inputCurs.datiSustinereCurs.numarOra) {
-        query['datiSustinereCurs.numarOra'] =
-          inputCurs.datiSustinereCurs.numarOra;
-      }
-      if (inputCurs.datiSustinereCurs.numarZi) {
-        query['datiSustinereCurs.numarZi'] =
-          inputCurs.datiSustinereCurs.numarZi;
+      if (inputCurs.datiSustinereCurs) {
+        if (inputCurs.datiSustinereCurs.numarOra) {
+          query['datiSustinereCurs.numarOra'] =
+            inputCurs.datiSustinereCurs.numarOra;
+        }
+        if (inputCurs.datiSustinereCurs.numarZi) {
+          query['datiSustinereCurs.numarZi'] =
+            inputCurs.datiSustinereCurs.numarZi;
+        }
       }
       return await this.cursModel
         .find(query)
-        .populate({
-          path: 'facultate',
-          populate: { path: 'cursuri', populate: { path: 'profesorCurs' } },
-        })
+        .populate([
+          {
+            path: 'facultate',
+            populate: {
+              path: 'cursuri',
+              populate: [
+                { path: 'profesorCurs' },
+                { path: 'studentiPrezenti' },
+                { path: 'studentiAbsenti', populate: { path: 'student' } },
+              ],
+            },
+          },
+          { path: 'profesorCurs' },
+          { path: 'studentiPrezenti' },
+          { path: 'studentiAbsenti' },
+        ])
         .exec();
     } catch (err) {
       throw new InternalServerErrorException(err);
@@ -125,7 +155,17 @@ export class CursService {
     try {
       const result = await this.cursModel
         .findByIdAndDelete(id)
-        .populate({ path: 'facultate', populate: { path: 'cursuri' } })
+        .populate({
+          path: 'facultate',
+          populate: {
+            path: 'cursuri',
+            populate: [
+              { path: 'profesorCurs' },
+              { path: 'studentiPrezenti' },
+              { path: 'studentiAbsenti', populate: { path: 'student' } },
+            ],
+          },
+        })
         .exec();
       if (result) {
         const facultateCurs = await this.facultateModel

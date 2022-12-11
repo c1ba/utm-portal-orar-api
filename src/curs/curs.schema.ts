@@ -16,11 +16,17 @@ export const CursSchema = new mongoose.Schema(
     facultate: { type: S.Types.ObjectId, ref: 'Facultate' },
     tipPrezentareCurs: { type: String },
     tipCurs: { type: String },
-    prezente: [{ type: String }],
     datiSustinereCurs: [
       { numarZi: { type: Number }, numarOra: { type: Number } },
     ],
     profesorCurs: { type: S.Types.ObjectId, ref: 'User' },
+    studentiPrezenti: [{ type: S.Types.ObjectId, ref: 'User' }],
+    studentiAbsenti: [
+      {
+        student: { type: S.Types.ObjectId, ref: 'User' },
+        motiv: { type: String },
+      },
+    ],
   },
   { collection: 'cursuri' },
 );
@@ -53,16 +59,20 @@ export class Curs extends Document {
   tipCurs!: string;
 
   @Prop({ required: false })
-  @Field(() => [String])
-  prezente?: string[];
-
-  @Prop({ required: false })
   @Field(() => [DataSustinereCurs])
   datiSustinereCurs?: DataSustinereCurs[];
 
   @Prop({ required: true })
   @Field(() => User)
   profesorCurs!: User;
+
+  @Prop({ required: false })
+  @Field(() => [User])
+  studentiPrezenti?: User[];
+
+  @Prop({ required: false })
+  @Field(() => [StudentAbsent])
+  studentiAbsenti?: StudentAbsent[];
 }
 
 @ObjectType()
@@ -103,14 +113,17 @@ export class CursuriWithoutNestedCursuri {
   @Field(() => String)
   tipCurs!: string;
 
-  @Field(() => [String])
-  prezente?: string[];
-
   @Field(() => [DataSustinereCurs])
   datiSustinereCurs?: DataSustinereCurs[];
 
   @Field(() => User)
   profesorCurs!: User;
+
+  @Field(() => [User])
+  studentiPrezenti?: User[];
+
+  @Field(() => [StudentAbsent])
+  studentiAbsenti?: StudentAbsent[];
 }
 
 @ObjectType()
@@ -130,14 +143,17 @@ export class CursuriWithoutFacultate {
   @Field(() => String)
   tipCurs!: string;
 
-  @Field(() => [String])
-  prezente?: string[];
-
   @Field(() => [DataSustinereCurs])
   datiSustinereCurs?: DataSustinereCurs[];
 
   @Field(() => User)
   profesorCurs!: User;
+
+  @Field(() => [User])
+  studentiPrezenti?: User[];
+
+  @Field(() => [StudentAbsent])
+  studentiAbsenti?: StudentAbsent[];
 }
 
 @InputType()
@@ -157,9 +173,6 @@ export class CursCreereInput {
   @Field(() => String)
   tipCurs!: string;
 
-  @Field(() => [String], { nullable: true })
-  prezente?: string[];
-
   @Field(() => [DataSustinereCursInput])
   datiSustinereCurs?: DataSustinereCursInput[];
 
@@ -173,7 +186,7 @@ export class CursUpdateInput {
   nume?: string;
 
   @Field(() => Int, { nullable: true })
-  anCurs!: number;
+  anCurs?: number;
 
   @Field(() => String, { nullable: true })
   tipPrezentareCurs?: string;
@@ -181,14 +194,17 @@ export class CursUpdateInput {
   @Field(() => String, { nullable: true })
   tipCurs?: string;
 
-  @Field(() => [String], { nullable: true })
-  prezente?: string[];
-
-  @Field(() => [DataSustinereCursInput])
+  @Field(() => [DataSustinereCursInput], { nullable: true })
   datiSustinereCurs?: DataSustinereCursInput[];
 
-  @Field(() => UserWhereInput)
-  profesorCurs!: UserWhereInput;
+  @Field(() => UserWhereInput, { nullable: true })
+  profesorCurs?: UserWhereInput;
+
+  @Field(() => [UserWhereInput], { nullable: true })
+  studentiPrezenti?: UserWhereInput[];
+
+  @Field(() => [StudentAbsentInput], { nullable: true })
+  studentiAbsenti?: StudentAbsentInput[];
 }
 
 @InputType()
@@ -217,6 +233,24 @@ export class CursFindManyInput {
   @Field(() => FacultateFindByIdInput)
   facultate: FacultateFindByIdInput;
 
-  @Field(() => [UserWhereInput])
-  profesorCurs!: UserWhereInput[];
+  @Field(() => [UserWhereInput], { nullable: true })
+  profesorCurs?: UserWhereInput[];
+}
+
+@ObjectType()
+export class StudentAbsent {
+  @Field(() => User)
+  student: User;
+
+  @Field(() => String)
+  motiv: string;
+}
+
+@InputType()
+export class StudentAbsentInput {
+  @Field(() => UserWhereInput)
+  student: UserWhereInput;
+
+  @Field(() => String)
+  motiv: string;
 }

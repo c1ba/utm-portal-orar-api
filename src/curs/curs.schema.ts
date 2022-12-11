@@ -21,6 +21,8 @@ export const CursSchema = new mongoose.Schema(
       { numarZi: { type: Number }, numarOra: { type: Number } },
     ],
     profesorCurs: { type: S.Types.ObjectId, ref: 'User' },
+    studentiPrezenti: [{ type: S.Types.ObjectId, ref: 'User' }],
+    studentiAbsenti: [{ type: S.Types.ObjectId, ref: 'User' }],
   },
   { collection: 'cursuri' },
 );
@@ -63,6 +65,14 @@ export class Curs extends Document {
   @Prop({ required: true })
   @Field(() => User)
   profesorCurs!: User;
+
+  @Prop({ required: false })
+  @Field(() => [User])
+  studentiPrezenti?: User[];
+
+  @Prop({ required: false })
+  @Field(() => [User])
+  studentiAbsenti?: User[];
 }
 
 @ObjectType()
@@ -111,6 +121,12 @@ export class CursuriWithoutNestedCursuri {
 
   @Field(() => User)
   profesorCurs!: User;
+
+  @Field(() => [User])
+  studentiPrezenti?: User[];
+
+  @Field(() => [User])
+  studentiAbsenti?: User[];
 }
 
 @ObjectType()
@@ -138,6 +154,12 @@ export class CursuriWithoutFacultate {
 
   @Field(() => User)
   profesorCurs!: User;
+
+  @Field(() => [User])
+  studentiPrezenti?: User[];
+
+  @Field(() => [User])
+  studentiAbsenti?: User[];
 }
 
 @InputType()
@@ -173,7 +195,7 @@ export class CursUpdateInput {
   nume?: string;
 
   @Field(() => Int, { nullable: true })
-  anCurs!: number;
+  anCurs?: number;
 
   @Field(() => String, { nullable: true })
   tipPrezentareCurs?: string;
@@ -184,11 +206,17 @@ export class CursUpdateInput {
   @Field(() => [String], { nullable: true })
   prezente?: string[];
 
-  @Field(() => [DataSustinereCursInput])
+  @Field(() => [DataSustinereCursInput], { nullable: true })
   datiSustinereCurs?: DataSustinereCursInput[];
 
-  @Field(() => UserWhereInput)
-  profesorCurs!: UserWhereInput;
+  @Field(() => UserWhereInput, { nullable: true })
+  profesorCurs?: UserWhereInput;
+
+  @Field(() => [UserWhereInput], { nullable: true })
+  studentiPrezenti?: UserWhereInput[];
+
+  @Field(() => [UserWhereInput], { nullable: true })
+  studentiAbsenti?: UserWhereInput[];
 }
 
 @InputType()
@@ -217,6 +245,6 @@ export class CursFindManyInput {
   @Field(() => FacultateFindByIdInput)
   facultate: FacultateFindByIdInput;
 
-  @Field(() => [UserWhereInput])
-  profesorCurs!: UserWhereInput[];
+  @Field(() => [UserWhereInput], { nullable: true })
+  profesorCurs?: UserWhereInput[];
 }

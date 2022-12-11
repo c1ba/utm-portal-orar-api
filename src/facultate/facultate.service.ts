@@ -17,7 +17,17 @@ export class FacultateService {
 
   async gasireTotalFacultati() {
     try {
-      return await this.facultateModel.find().populate('cursuri').exec();
+      return await this.facultateModel
+        .find()
+        .populate({
+          path: 'cursuri',
+          populate: [
+            { path: 'profesorCurs' },
+            { path: 'studentiPrezenti' },
+            { path: 'studentiAbsenti' },
+          ],
+        })
+        .exec();
     } catch (err) {
       throw new InternalServerErrorException(err);
     }
@@ -27,7 +37,14 @@ export class FacultateService {
     try {
       return await (
         await this.facultateModel.create(facultate)
-      ).populate('cursuri');
+      ).populate({
+        path: 'cursuri',
+        populate: [
+          { path: 'profesorCurs' },
+          { path: 'studentiPrezenti' },
+          { path: 'studentiAbsenti' },
+        ],
+      });
     } catch (err) {
       throw new InternalServerErrorException(err);
     }
@@ -37,7 +54,14 @@ export class FacultateService {
     try {
       const facultate = await this.facultateModel
         .findById(id)
-        .populate({ path: 'cursuri', populate: { path: 'profesorCurs' } })
+        .populate({
+          path: 'cursuri',
+          populate: [
+            { path: 'profesorCurs' },
+            { path: 'studentiPrezenti' },
+            { path: 'studentiAbsenti' },
+          ],
+        })
         .exec();
       if (!facultate) {
         throw new NotFoundException('Facultate Negasita');

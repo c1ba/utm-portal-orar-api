@@ -17,7 +17,16 @@ export class UserService {
 
   async gasireTotiUseri() {
     try {
-      return this.userModel.find().exec();
+      return this.userModel
+        .find()
+        .populate({
+          path: 'rol',
+          populate: [
+            { path: 'facultati', populate: { path: 'facultate' } },
+            { path: 'persoana' },
+          ],
+        })
+        .exec();
     } catch (err) {
       throw new InternalServerErrorException(err);
     }

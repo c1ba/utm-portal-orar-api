@@ -27,7 +27,10 @@ export class CursService {
     try {
       const cursNou = await (
         await this.cursModel.create(curs)
-      ).populate({ path: 'facultate', populate: { path: 'cursuri' } });
+      ).populate({
+        path: 'facultate',
+        populate: { path: 'cursuri', populate: { path: 'profesorCurs' } },
+      });
       if (cursNou) {
         const totalCursuri = await this.cursModel
           .find({ facultate: { _id: curs.facultate._id } })
@@ -108,7 +111,10 @@ export class CursService {
       }
       return await this.cursModel
         .find(query)
-        .populate({ path: 'facultate', populate: { path: 'cursuri' } })
+        .populate({
+          path: 'facultate',
+          populate: { path: 'cursuri', populate: { path: 'profesorCurs' } },
+        })
         .exec();
     } catch (err) {
       throw new InternalServerErrorException(err);

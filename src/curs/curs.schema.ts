@@ -7,6 +7,7 @@ import {
   FacultateSchema,
   FacultateWithoutNestedFacultate,
 } from 'src/facultate/facultate.schema';
+import { User, UserWhereInput } from 'src/user/user.schema';
 
 export const CursSchema = new mongoose.Schema(
   {
@@ -19,6 +20,7 @@ export const CursSchema = new mongoose.Schema(
     datiSustinereCurs: [
       { numarZi: { type: Number }, numarOra: { type: Number } },
     ],
+    profesorCurs: { type: S.Types.ObjectId, ref: 'User' },
   },
   { collection: 'cursuri' },
 );
@@ -57,6 +59,10 @@ export class Curs extends Document {
   @Prop({ required: false })
   @Field(() => [DataSustinereCurs])
   datiSustinereCurs?: DataSustinereCurs[];
+
+  @Prop({ required: true })
+  @Field(() => User)
+  profesorCurs!: User;
 }
 
 @ObjectType()
@@ -102,6 +108,9 @@ export class CursuriWithoutNestedCursuri {
 
   @Field(() => [DataSustinereCurs])
   datiSustinereCurs?: DataSustinereCurs[];
+
+  @Field(() => User)
+  profesorCurs!: User;
 }
 
 @ObjectType()
@@ -126,6 +135,9 @@ export class CursuriWithoutFacultate {
 
   @Field(() => [DataSustinereCurs])
   datiSustinereCurs?: DataSustinereCurs[];
+
+  @Field(() => User)
+  profesorCurs!: User;
 }
 
 @InputType()
@@ -150,6 +162,9 @@ export class CursCreereInput {
 
   @Field(() => [DataSustinereCursInput])
   datiSustinereCurs?: DataSustinereCursInput[];
+
+  @Field(() => UserWhereInput)
+  profesorCurs!: UserWhereInput;
 }
 
 @InputType()
@@ -171,6 +186,9 @@ export class CursUpdateInput {
 
   @Field(() => [DataSustinereCursInput])
   datiSustinereCurs?: DataSustinereCursInput[];
+
+  @Field(() => UserWhereInput)
+  profesorCurs!: UserWhereInput;
 }
 
 @InputType()
@@ -198,4 +216,7 @@ export class CursFindManyInput {
 
   @Field(() => FacultateFindByIdInput)
   facultate: FacultateFindByIdInput;
+
+  @Field(() => [UserWhereInput])
+  profesorCurs!: UserWhereInput[];
 }

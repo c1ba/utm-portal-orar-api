@@ -7,7 +7,7 @@ import {
   FacultateSchema,
   FacultateWithoutNestedFacultate,
 } from 'src/facultate/facultate.schema';
-import { User, UserWhereInput } from 'src/user/user.schema';
+import { User, UserSchema, UserWhereInput } from 'src/user/user.schema';
 
 export const CursSchema = new mongoose.Schema(
   {
@@ -38,11 +38,11 @@ export class Curs extends Document {
   @Field(() => ID)
   _id!: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, type: String })
   @Field(() => String)
   nume!: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, type: Number })
   @Field(() => Int)
   anCurs!: number;
 
@@ -50,11 +50,11 @@ export class Curs extends Document {
   @Field(() => Facultate)
   facultate!: Facultate;
 
-  @Prop({ required: true })
+  @Prop({ required: true, type: String })
   @Field(() => String)
   tipPrezentareCurs!: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, type: String })
   @Field(() => String)
   tipCurs!: string;
 
@@ -62,11 +62,11 @@ export class Curs extends Document {
   @Field(() => [DataSustinereCurs])
   datiSustinereCurs?: DataSustinereCurs[];
 
-  @Prop({ required: true })
+  @Prop({ required: true, type: UserSchema })
   @Field(() => User)
   profesorCurs!: User;
 
-  @Prop({ required: false })
+  @Prop({ required: false, type: UserSchema })
   @Field(() => [User])
   studentiPrezenti?: User[];
 

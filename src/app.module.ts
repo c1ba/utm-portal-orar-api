@@ -1,29 +1,27 @@
 import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
 import { CursModule } from './curs/curs.module';
 import { FacultateModule } from './facultate/facultate.module';
 import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       playground: true,
       debug: true,
       autoSchemaFile: true,
     }),
-    MongooseModule.forRoot(
-      'mongodb+srv://teeheejackson02:teehee123@practicecluster.grofc.mongodb.net/?retryWrites=true&w=majority',
-    ),
+    MongooseModule.forRoot(process.env.DATABASE_URL),
+    AuthModule,
     CursModule,
     FacultateModule,
     UserModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

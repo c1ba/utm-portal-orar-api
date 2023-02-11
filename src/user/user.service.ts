@@ -2,17 +2,21 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Rol } from 'src/rol/rol.schema';
 import { User, UserCreereInput } from './user.schema';
+import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel('User') private readonly userModel: Model<User>,
     @InjectModel('Rol') private readonly rolModel: Model<Rol>,
+    private readonly jwtService: JwtService,
   ) {}
 
   async gasireTotiUseri() {
@@ -37,10 +41,13 @@ export class UserService {
     tipRol: 'student' | 'profesor' | 'secretar' | 'admin',
   ) {
     try {
+      const userSalt = await bcrypt.genSalt(parseInt(process.env.SALT_ROUNDS));
+      const parolaHashed = await bcrypt.hash(user.parola, userSalt);
       const dateUser = {
         nume: user.nume,
         numarTelefon: user.numarTelefon,
         eMail: user.eMail,
+        parola: parolaHashed,
       };
       const userNou = await this.userModel.create(dateUser);
       const dateRol =
@@ -108,6 +115,31 @@ export class UserService {
         throw new NotFoundException('User Negasit');
       }
       return user;
+    } catch (err) {
+      throw new InternalServerErrorException(err);
+    }
+  }
+
+  async logare(email: string, parola: string) {
+    try {
+      const userExists = await this.userModel.find({ eMail: email }).exec();
+      if (!userExists || userExists.length === 0) {
+        throw new UnauthorizedException('Userul nu exista');
+      }
+      const parolaHashed = userExists[0].parola;
+      const result = await bcrypt.compare(parola, parolaHashed);
+      if (!result) {
+        throw new UnauthorizedException('Date de logare gresite');
+      }
+      const rol = await this.rolModel.findById(userExists[0].rol);
+      const payload = {
+        id: userExists[0]._id,
+        rol: rol.tip,
+      };
+      const token = this.jwtService.sign(payload, {
+        expiresIn: '3h',
+      });
+      return token;
     } catch (err) {
       throw new InternalServerErrorException(err);
     }

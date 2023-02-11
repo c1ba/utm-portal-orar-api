@@ -9,6 +9,7 @@ export const UserSchema = new mongoose.Schema(
     eMail: { type: String },
     numarTelefon: { type: String },
     rol: { type: S.Types.ObjectId, ref: 'Rol' },
+    parola: { type: String },
   },
   { collection: 'useri' },
 );
@@ -35,6 +36,10 @@ export class User extends Document {
   @Prop({ type: { type: S.Types.ObjectId, ref: 'Rol' }, required: true })
   @Field(() => Rol)
   rol: Rol;
+
+  @Prop({ required: true })
+  @Field(() => String)
+  parola: string;
 }
 
 @ObjectType()
@@ -69,6 +74,9 @@ export class UserCreereInput {
 
   @Field(() => CreereRolInput)
   rol: CreereRolInput;
+
+  @Field(() => String)
+  parola: string;
 }
 
 @InputType()

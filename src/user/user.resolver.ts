@@ -20,6 +20,8 @@ export class UserResolver {
     return await this.userService.gasireUser(id);
   }
 
+  @AuthRequired()
+  @isAdmin()
   @Mutation(() => User)
   async creereUser(
     @Args('user') user: UserCreereInput,

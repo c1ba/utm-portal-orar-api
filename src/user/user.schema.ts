@@ -1,4 +1,4 @@
-import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
+import { Field, HideField, ID, InputType, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema } from '@nestjs/mongoose';
 import mongoose, { Document, Schema as S } from 'mongoose';
 import { CreereRolInput, Rol } from 'src/rol/rol.schema';
@@ -18,7 +18,7 @@ export const UserSchema = new mongoose.Schema(
 @ObjectType()
 export class User extends Document {
   @Prop()
-  @Field(() => ID)
+  @HideField()
   _id: string;
 
   @Prop({ required: true })
@@ -45,7 +45,7 @@ export class User extends Document {
 @ObjectType()
 export class UserWithoutRole {
   @Prop()
-  @Field(() => ID)
+  @HideField()
   _id: string;
 
   @Prop({ required: true })

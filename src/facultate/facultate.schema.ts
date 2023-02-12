@@ -1,4 +1,4 @@
-import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
+import { Field, HideField, ID, InputType, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema } from '@nestjs/mongoose';
 import { Type } from 'class-transformer';
 import mongoose, { Document, Schema as S } from 'mongoose';
@@ -21,7 +21,7 @@ export const FacultateSchema = new mongoose.Schema(
 @ObjectType()
 export class Facultate extends Document {
   @Prop()
-  @Field(() => ID)
+  @HideField()
   _id: string;
 
   @Prop()
@@ -36,7 +36,7 @@ export class Facultate extends Document {
 
 @ObjectType()
 export class FacultateWithoutCursuri {
-  @Field(() => ID)
+  @HideField()
   _id: string;
 
   @Field(() => String)
@@ -45,7 +45,7 @@ export class FacultateWithoutCursuri {
 
 @ObjectType()
 export class FacultateWithoutNestedFacultate {
-  @Field(() => ID)
+  @HideField()
   _id: string;
 
   @Field(() => String)

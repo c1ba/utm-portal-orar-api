@@ -1,4 +1,11 @@
-import { Field, ID, InputType, Int, ObjectType } from '@nestjs/graphql';
+import {
+  Field,
+  ID,
+  InputType,
+  Int,
+  ObjectType,
+  registerEnumType,
+} from '@nestjs/graphql';
 import { Prop, Schema } from '@nestjs/mongoose';
 import mongoose, { Document, Schema as S } from 'mongoose';
 import {
@@ -27,9 +34,25 @@ export const CursSchema = new mongoose.Schema(
         motiv: { type: String },
       },
     ],
+    salaPredare: { type: Number },
   },
   { collection: 'cursuri' },
 );
+
+enum TipPrezentareCursTypes {
+  FIZIC,
+  HIBRID,
+  ONLINE,
+}
+
+registerEnumType(TipPrezentareCursTypes, { name: 'TipPrezentareCursTypes' });
+
+enum TipCursTypes {
+  CURS,
+  LABORATOR,
+}
+
+registerEnumType(TipCursTypes, { name: 'TipCursTypes' });
 
 @Schema()
 @ObjectType()
@@ -51,12 +74,12 @@ export class Curs extends Document {
   facultate!: Facultate;
 
   @Prop({ required: true, type: String })
-  @Field(() => String)
-  tipPrezentareCurs!: string;
+  @Field(() => TipPrezentareCursTypes)
+  tipPrezentareCurs!: TipPrezentareCursTypes;
 
   @Prop({ required: true, type: String })
-  @Field(() => String)
-  tipCurs!: string;
+  @Field(() => TipCursTypes)
+  tipCurs!: TipCursTypes;
 
   @Prop({ required: false })
   @Field(() => [DataSustinereCurs])
@@ -73,6 +96,10 @@ export class Curs extends Document {
   @Prop({ required: false })
   @Field(() => [StudentAbsent])
   studentiAbsenti?: StudentAbsent[];
+
+  @Prop({ required: false })
+  @Field(() => Number)
+  salaPredare?: number;
 }
 
 @ObjectType()
@@ -107,11 +134,11 @@ export class CursuriWithoutNestedCursuri {
   @Field(() => FacultateWithoutNestedFacultate)
   facultate!: FacultateWithoutNestedFacultate;
 
-  @Field(() => String)
-  tipPrezentareCurs!: string;
+  @Field(() => TipPrezentareCursTypes)
+  tipPrezentareCurs!: TipPrezentareCursTypes;
 
-  @Field(() => String)
-  tipCurs!: string;
+  @Field(() => TipCursTypes)
+  tipCurs!: TipCursTypes;
 
   @Field(() => [DataSustinereCurs])
   datiSustinereCurs?: DataSustinereCurs[];
@@ -137,11 +164,11 @@ export class CursuriWithoutFacultate {
   @Field(() => Int)
   anCurs!: number;
 
-  @Field(() => String)
-  tipPrezentareCurs!: string;
+  @Field(() => TipPrezentareCursTypes)
+  tipPrezentareCurs!: TipPrezentareCursTypes;
 
-  @Field(() => String)
-  tipCurs!: string;
+  @Field(() => TipCursTypes)
+  tipCurs!: TipCursTypes;
 
   @Field(() => [DataSustinereCurs])
   datiSustinereCurs?: DataSustinereCurs[];
@@ -167,11 +194,11 @@ export class CursCreereInput {
   @Field(() => FacultateFindByIdInput)
   facultate!: FacultateFindByIdInput;
 
-  @Field(() => String)
-  tipPrezentareCurs!: string;
+  @Field(() => TipPrezentareCursTypes)
+  tipPrezentareCurs!: TipPrezentareCursTypes;
 
-  @Field(() => String)
-  tipCurs!: string;
+  @Field(() => TipCursTypes)
+  tipCurs!: TipCursTypes;
 
   @Field(() => [DataSustinereCursInput])
   datiSustinereCurs?: DataSustinereCursInput[];
@@ -188,11 +215,11 @@ export class CursUpdateInput {
   @Field(() => Int, { nullable: true })
   anCurs?: number;
 
-  @Field(() => String, { nullable: true })
-  tipPrezentareCurs?: string;
+  @Field(() => TipPrezentareCursTypes, { nullable: true })
+  tipPrezentareCurs?: TipPrezentareCursTypes;
 
-  @Field(() => String, { nullable: true })
-  tipCurs?: string;
+  @Field(() => TipCursTypes, { nullable: true })
+  tipCurs?: TipCursTypes;
 
   @Field(() => [DataSustinereCursInput], { nullable: true })
   datiSustinereCurs?: DataSustinereCursInput[];
@@ -221,11 +248,11 @@ export class CursFindManyInput {
   @Field(() => Int, { nullable: true })
   anCurs!: number;
 
-  @Field(() => String, { nullable: true })
-  tipPrezentareCurs?: string;
+  @Field(() => TipPrezentareCursTypes, { nullable: true })
+  tipPrezentareCurs?: TipPrezentareCursTypes;
 
-  @Field(() => String, { nullable: true })
-  tipCurs?: string;
+  @Field(() => TipCursTypes, { nullable: true })
+  tipCurs?: TipCursTypes;
 
   @Field(() => DataSustinereCursInput, { nullable: true })
   datiSustinereCurs?: DataSustinereCursInput;

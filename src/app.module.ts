@@ -3,14 +3,12 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
-import {
-  DepthLimitPlugin,
-  RateLimiterPlugin,
-} from './apollo-custom/custom-plugins';
+import { RateLimiterPlugin } from './apollo-custom/rate-limiter-plugin';
 import { AuthModule } from './auth/auth.module';
 import { CursModule } from './curs/curs.module';
 import { FacultateModule } from './facultate/facultate.module';
 import { UserModule } from './user/user.module';
+import { DepthLimitPlugin } from './apollo-custom/depth-limit-plugin';
 
 @Module({
   imports: [

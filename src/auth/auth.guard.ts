@@ -31,7 +31,7 @@ export class AuthGuard implements CanActivate {
         throw new UnauthorizedException('Token Nono');
       }
       const token: string = request.headers['authorization'].split(' ')[1];
-      const decoded = this.jwtService.verify(token);
+      const decoded = await this.jwtService.verifyAsync(token);
       if (!decoded) {
         throw new UnauthorizedException('Token invalid');
       }

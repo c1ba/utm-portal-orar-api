@@ -7,21 +7,22 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Facultate } from 'src/facultate/facultate.schema';
 import {
+  ConfirmareAbsentaCursArgs,
+  ConfirmarePrezentaLaCurs,
   Curs,
   CursCreereInput,
   CursFindManyInput,
   CursUpdateInput,
 } from './curs.schema';
+import { User } from 'src/user/user.schema';
 
 @Injectable()
 export class CursService {
   constructor(
     @InjectModel('Curs') private readonly cursModel: Model<Curs>,
     @InjectModel('Facultate') private readonly facultateModel: Model<Facultate>,
+    @InjectModel('User') private readonly userModel: Model<User>,
   ) {}
-  async helloWorld() {
-    return await 'Hello World';
-  }
 
   async creereCurs(curs: CursCreereInput) {
     try {
@@ -94,7 +95,72 @@ export class CursService {
         ])
         .exec();
       if (!curs) {
-        throw new NotFoundException(`Userul Nu a Fost Gasit`);
+        throw new NotFoundException(`Cursul Nu a Fost Gasit`);
+      }
+      return curs;
+    } catch (err) {
+      throw new InternalServerErrorException(err);
+    }
+  }
+
+  async confirmarePrezentaLaCurs(input: ConfirmarePrezentaLaCurs) {
+    try {
+      const utilizator = await this.userModel.findById(input.idUser);
+      if (!utilizator) {
+        throw new NotFoundException(`Utilizatorul Nu a Fost Gasit`);
+      }
+      const curs = await this.cursModel
+        .findByIdAndUpdate(
+          input.idCurs,
+          {
+            $push: { studentiPrezenti: utilizator._id },
+          },
+          { new: true },
+        )
+        .populate([
+          { path: 'facultate' },
+          { path: 'profesorCurs' },
+          { path: 'studentiPrezenti' },
+          { path: 'studentiAbsenti', populate: { path: 'student' } },
+        ])
+        .exec();
+      if (!curs) {
+        throw new NotFoundException(`Cursul Nu a Fost Gasit`);
+      }
+      return curs;
+    } catch (err) {
+      throw new InternalServerErrorException(err);
+    }
+  }
+
+  async confirmareAbsentaLaCurs(input: ConfirmareAbsentaCursArgs) {
+    try {
+      const utilizator = await this.userModel.findById(input.idUser);
+      if (!utilizator) {
+        throw new NotFoundException(`Utilizatorul Nu a Fost Gasit`);
+      }
+      const curs = await this.cursModel
+        .findByIdAndUpdate(
+          input.idCurs,
+          {
+            $push: {
+              studentiAbsenti: {
+                student: utilizator._id,
+                motiv: input.motivAbsenta,
+              },
+            },
+          },
+          { new: true },
+        )
+        .populate([
+          { path: 'facultate' },
+          { path: 'profesorCurs' },
+          { path: 'studentiPrezenti' },
+          { path: 'studentiAbsenti', populate: { path: 'student' } },
+        ])
+        .exec();
+      if (!curs) {
+        throw new NotFoundException(`Cursul Nu a Fost Gasit`);
       }
       return curs;
     } catch (err) {

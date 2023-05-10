@@ -208,6 +208,27 @@ export class CursUpdateInput {
 }
 
 @InputType()
+export class ConfirmarePrezentaLaCurs {
+  @Field(() => ID, { nullable: false })
+  idCurs: string;
+
+  @Field(() => ID, { nullable: false })
+  idUser: string;
+}
+
+@InputType()
+export class ConfirmareAbsentaCursArgs {
+  @Field(() => ID, { nullable: false })
+  idCurs: string;
+
+  @Field(() => ID, { nullable: false })
+  idUser: string;
+
+  @Field(() => String, { nullable: false })
+  motivAbsenta: string;
+}
+
+@InputType()
 export class CursWhereInput {
   @Field(() => ID, { nullable: true })
   _id?: string;

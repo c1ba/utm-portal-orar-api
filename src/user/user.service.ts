@@ -136,8 +136,8 @@ export class UserService {
         id: userExists[0]._id,
         rol: rol.tip,
       };
-      const token = this.jwtService.sign(payload, {
-        expiresIn: '3h',
+      const token = await this.jwtService.signAsync(payload, {
+        expiresIn: process.env.JWT_EXPIRATION,
       });
       return token;
     } catch (err) {

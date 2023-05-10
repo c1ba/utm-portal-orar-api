@@ -1,6 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthRequired, isAdmin } from 'src/auth/auth.decorators';
-import { User, UserCreereInput } from './user.schema';
+import { UserCreereInput, UserFaraParola } from './user.schema';
 import { UserService } from './user.service';
 
 @Resolver()
@@ -9,20 +9,20 @@ export class UserResolver {
 
   @AuthRequired()
   @isAdmin()
-  @Query(() => [User])
+  @Query(() => [UserFaraParola])
   async gasireTotiUseri() {
     return await this.userService.gasireTotiUseri();
   }
 
   @AuthRequired()
-  @Query(() => User)
+  @Query(() => UserFaraParola)
   async gasireUser(@Args('id') id: string) {
     return await this.userService.gasireUser(id);
   }
 
   @AuthRequired()
   @isAdmin()
-  @Mutation(() => User)
+  @Mutation(() => UserFaraParola)
   async creereUser(
     @Args('user') user: UserCreereInput,
     @Args('rol') rol: 'student' | 'profesor' | 'secretar' | 'admin',

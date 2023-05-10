@@ -43,6 +43,24 @@ export class User extends Document {
 }
 
 @ObjectType()
+export class UserFaraParola {
+  @Field(() => ID)
+  _id: string;
+
+  @Field(() => String)
+  nume: string;
+
+  @Field(() => String)
+  eMail: string;
+
+  @Field(() => String)
+  numarTelefon: string;
+
+  @Field(() => Rol)
+  rol: Rol;
+}
+
+@ObjectType()
 export class UserWithoutRole {
   @Prop()
   @Field(() => ID)

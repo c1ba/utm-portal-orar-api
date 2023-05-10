@@ -15,8 +15,8 @@ import { DepthLimitPlugin } from './apollo-custom/depth-limit-plugin';
     ConfigModule.forRoot({ isGlobal: true }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      playground: true,
-      debug: true,
+      playground: process.env.NODE_ENV === 'development',
+      debug: process.env.NODE_ENV === 'development',
       autoSchemaFile: true,
       plugins: [
         new DepthLimitPlugin({ depthLimit: 15 }),

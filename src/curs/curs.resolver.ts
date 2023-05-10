@@ -1,6 +1,8 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { AuthRequired, isAdmin } from 'src/auth/auth.decorators';
 import {
+  ConfirmareAbsentaCursArgs,
+  ConfirmarePrezentaLaCurs,
   Curs,
   CursCreereInput,
   CursFindManyInput,
@@ -12,10 +14,6 @@ import { CursService } from './curs.service';
 @Resolver()
 export class CursResolver {
   constructor(private cursService: CursService) {}
-  @Query(() => String)
-  async helloWorld() {
-    return await this.cursService.helloWorld();
-  }
 
   @AuthRequired()
   @Query(() => [Curs])
@@ -58,6 +56,7 @@ export class CursResolver {
   async stergereCurs(@Args('id') id: string) {
     return await this.cursService.stergereCurs(id);
   }
+
   @AuthRequired()
   @isAdmin()
   @Mutation(() => [CursuriWithoutNestedCursuri])
@@ -65,5 +64,17 @@ export class CursResolver {
     @Args('inputFindCursuri') inputFindCursuri: CursFindManyInput,
   ) {
     return await this.cursService.stergereCursuri(inputFindCursuri);
+  }
+
+  @AuthRequired()
+  @Mutation(() => CursuriWithoutNestedCursuri)
+  async confirmarePrezentaLaCurs(@Args('args') args: ConfirmarePrezentaLaCurs) {
+    return await this.cursService.confirmarePrezentaLaCurs(args);
+  }
+
+  @AuthRequired()
+  @Mutation(() => CursuriWithoutNestedCursuri)
+  async confirmareAbsentaLaCurs(@Args('args') args: ConfirmareAbsentaCursArgs) {
+    return await this.cursService.confirmareAbsentaLaCurs(args);
   }
 }

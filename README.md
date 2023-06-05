@@ -15,15 +15,19 @@ Aplicație practică pentru examenul de licență cu subiectul "Implementarea Te
 
 ## Installation
 
+<p>Pentru ca aplicația să poată fi rulată, este necesară instalarea yarn și a Nest CLI-ului. Teoretic acestea ar trebui să fie deja instalate în proiect.</p>
+
+  - <p>Linkul către instalarea yarn e regăsit  <a href="https://classic.yarnpkg.com/lang/en/docs/install/#windows-stable">aici</a>.</p>
+  - <p>Linkul către instalarea Nest CLI e regăsit  <a href="https://docs.nestjs.com/cli/overview">aici</a>.</p>
+
+
 ```bash
 $ yarn install
 ```
 
 ## Running the app
 
-<p>Pentru ca aplicația să poată fi rulată, este necesară instalarea yarn. Linkul către site-ul oficial e regăsit  <a href="https://classic.yarnpkg.com/lang/en/docs/install/#windows-stable">aici</a>.</p>
-
-De asemenea, trebuie creat o filă .env ce conține următoarele variabile
+1. Trebuie creat o filă .env ce conține următoarele variabile
 
   - NODE_ENV
   - DATABASE_URL

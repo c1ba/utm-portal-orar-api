@@ -6,9 +6,11 @@ import { RolSchema } from 'src/rol/rol.schema';
 import { UserResolver } from './user.resolver';
 import { UserSchema } from './user.schema';
 import { UserService } from './user.service';
+import { LoggerModule } from 'src/logging/logger.module';
 
 @Module({
   imports: [
+    LoggerModule,
     MongooseModule.forFeature([
       { name: 'User', schema: UserSchema },
       { name: 'Rol', schema: RolSchema },

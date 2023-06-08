@@ -6,34 +6,75 @@ import {
   FacultateWithoutCursuri,
 } from './facultate.schema';
 import { FacultateService } from './facultate.service';
+import { CustomLogger } from 'src/logging/logger.service';
+import { GraphQLError } from 'graphql';
 
 @Resolver()
 export class FacultateResolver {
-  constructor(private facultateService: FacultateService) {}
+  constructor(
+    private facultateService: FacultateService,
+    private logger: CustomLogger,
+  ) {}
 
   @AuthRequired()
   @Query(() => [Facultate])
   async gasireTotalFacultati() {
-    return await this.facultateService.gasireTotalFacultati();
+    try {
+      const result = await this.facultateService.gasireTotalFacultati();
+      if (result) {
+        this.logger.log(`Operatiune executata cu succes.`);
+        return result;
+      }
+    } catch (err) {
+      this.logger.error(err);
+      throw new GraphQLError(err);
+    }
   }
 
   @AuthRequired()
   @Query(() => Facultate)
   async gasireFacultate(@Args('id') id: string) {
-    return await this.facultateService.gasireFacultate(id);
+    try {
+      const result = await this.facultateService.gasireFacultate(id);
+      if (result) {
+        this.logger.log(`Operatiune executata cu succes.`);
+        return result;
+      }
+    } catch (err) {
+      this.logger.error(err);
+      throw new GraphQLError(err);
+    }
   }
 
   @AuthRequired()
   @isAdmin()
   @Mutation(() => Facultate)
   async creereFacultate(@Args('facultate') facultate: FacultateCreereInput) {
-    return await this.facultateService.creereFacultate(facultate);
+    try {
+      const result = await this.facultateService.creereFacultate(facultate);
+      if (result) {
+        this.logger.log(`Operatiune executata cu succes.`);
+        return result;
+      }
+    } catch (err) {
+      this.logger.error(err);
+      throw new GraphQLError(err);
+    }
   }
 
   @AuthRequired()
   @isAdmin()
   @Mutation(() => FacultateWithoutCursuri)
   async stergereFacultate(@Args('id') id: string) {
-    return await this.facultateService.stergereFacultate(id);
+    try {
+      const result = await this.facultateService.stergereFacultate(id);
+      if (result) {
+        this.logger.log(`Operatiune executata cu succes.`);
+        return result;
+      }
+    } catch (err) {
+      this.logger.error(err);
+      throw new GraphQLError(err);
+    }
   }
 }

@@ -10,34 +10,72 @@ import {
   CursuriWithoutNestedCursuri,
 } from './curs.schema';
 import { CursService } from './curs.service';
+import { CustomLogger } from 'src/logging/logger.service';
+import { GraphQLError } from 'graphql';
 
 @Resolver()
 export class CursResolver {
-  constructor(private cursService: CursService) {}
+  constructor(private cursService: CursService, private logger: CustomLogger) {}
 
   @AuthRequired()
   @Query(() => [Curs])
   async gasireTotalCursuri() {
-    return await this.cursService.gasireTotalCursuri();
+    try {
+      const result = await this.cursService.gasireTotalCursuri();
+      if (result) {
+        this.logger.log(`Operatiune executata cu succes.`);
+        return result;
+      }
+    } catch (err) {
+      this.logger.error(err);
+      throw new GraphQLError(err);
+    }
   }
 
   @AuthRequired()
   @Query(() => Curs)
   async gasireCurs(@Args('id') id: string) {
-    return await this.cursService.gasireCurs(id);
+    try {
+      const result = await this.cursService.gasireCurs(id);
+      if (result) {
+        this.logger.log(`Operatiune executata cu succes.`);
+        return result;
+      }
+    } catch (err) {
+      this.logger.error(err);
+      throw new GraphQLError(err);
+    }
   }
 
   @AuthRequired()
   @Query(() => [CursuriWithoutNestedCursuri])
   async gasireCursuri(@Args('cursInput') cursInput: CursFindManyInput) {
-    return await this.cursService.gasireCursuri(cursInput);
+    try {
+      const result = await this.cursService.gasireCursuri(cursInput);
+      if (result) {
+        this.logger.log(`Operatiune executata cu succes.`);
+        return result;
+      }
+    } catch (err) {
+      this.logger.error(err);
+      throw new GraphQLError(err);
+    }
   }
 
   @AuthRequired()
   @isAdmin()
   @Mutation(() => CursuriWithoutNestedCursuri)
   async creereCurs(@Args('curs') curs: CursCreereInput) {
-    return await this.cursService.creereCurs(curs);
+    try {
+      const result = await this.cursService.creereCurs(curs);
+      if (result) {
+        this.logger.log(`Operatiune executata cu succes.`);
+        return result;
+      }
+    } catch (err) {
+      this.logger.error(err);
+      throw new GraphQLError(err);
+    }
   }
 
   @AuthRequired()
@@ -47,14 +85,32 @@ export class CursResolver {
     @Args('id') id: string,
     @Args('inputEditareCurs') inputEditareCurs: CursUpdateInput,
   ) {
-    return await this.cursService.editareCurs(id, inputEditareCurs);
+    try {
+      const result = await this.cursService.editareCurs(id, inputEditareCurs);
+      if (result) {
+        this.logger.log(`Operatiune executata cu succes.`);
+        return result;
+      }
+    } catch (err) {
+      this.logger.error(err);
+      throw new GraphQLError(err);
+    }
   }
 
   @AuthRequired()
   @isAdmin()
   @Mutation(() => CursuriWithoutNestedCursuri)
   async stergereCurs(@Args('id') id: string) {
-    return await this.cursService.stergereCurs(id);
+    try {
+      const result = await this.cursService.stergereCurs(id);
+      if (result) {
+        this.logger.log(`Operatiune executata cu succes.`);
+        return result;
+      }
+    } catch (err) {
+      this.logger.error(err);
+      throw new GraphQLError(err);
+    }
   }
 
   @AuthRequired()
@@ -63,18 +119,45 @@ export class CursResolver {
   async stergereCursuri(
     @Args('inputFindCursuri') inputFindCursuri: CursFindManyInput,
   ) {
-    return await this.cursService.stergereCursuri(inputFindCursuri);
+    try {
+      const result = await this.cursService.stergereCursuri(inputFindCursuri);
+      if (result) {
+        this.logger.log(`Operatiune executata cu succes.`);
+        return result;
+      }
+    } catch (err) {
+      this.logger.error(err);
+      throw new GraphQLError(err);
+    }
   }
 
   @AuthRequired()
   @Mutation(() => CursuriWithoutNestedCursuri)
   async confirmarePrezentaLaCurs(@Args('args') args: ConfirmarePrezentaLaCurs) {
-    return await this.cursService.confirmarePrezentaLaCurs(args);
+    try {
+      const result = await this.cursService.confirmarePrezentaLaCurs(args);
+      if (result) {
+        this.logger.log(`Operatiune executata cu succes.`);
+        return result;
+      }
+    } catch (err) {
+      this.logger.error(err);
+      throw new GraphQLError(err);
+    }
   }
 
   @AuthRequired()
   @Mutation(() => CursuriWithoutNestedCursuri)
   async confirmareAbsentaLaCurs(@Args('args') args: ConfirmareAbsentaCursArgs) {
-    return await this.cursService.confirmareAbsentaLaCurs(args);
+    try {
+      const result = await this.cursService.confirmareAbsentaLaCurs(args);
+      if (result) {
+        this.logger.log(`Operatiune executata cu succes.`);
+        return result;
+      }
+    } catch (err) {
+      this.logger.error(err);
+      throw new GraphQLError(err);
+    }
   }
 }

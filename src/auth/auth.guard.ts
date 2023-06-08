@@ -41,7 +41,7 @@ export class AuthGuard implements CanActivate {
         operationArgs = JSON.stringify(request.body.variables);
 
       this.logger.log(
-        `Userul a cerut operatiunea cu numele ${operationName}, folosing argumentele ${operationArgs}`,
+        `Userul a cerut operatiunea cu numele ${operationName}, folosind argumentele ${operationArgs}`,
         {
           requestingUserId: requestingUserId,
         },

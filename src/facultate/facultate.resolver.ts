@@ -1,5 +1,5 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { AuthRequired, isAdmin } from 'src/auth/auth.decorators';
+import { AuthRequired, RequestUserID, isAdmin } from 'src/auth/auth.decorators';
 import {
   Facultate,
   FacultateCreereInput,
@@ -18,11 +18,14 @@ export class FacultateResolver {
 
   @AuthRequired()
   @Query(() => [Facultate])
-  async gasireTotalFacultati() {
+  async gasireTotalFacultati(@RequestUserID() requestingUserId: string) {
     try {
       const result = await this.facultateService.gasireTotalFacultati();
       if (result) {
-        this.logger.log(`Operatiune executata cu succes.`);
+        this.logger.log(
+          `Operatiunea de ${this.gasireTotalFacultati.name} executata cu succes.`,
+          { requestingUserId: requestingUserId },
+        );
         return result;
       }
     } catch (err) {
@@ -33,11 +36,17 @@ export class FacultateResolver {
 
   @AuthRequired()
   @Query(() => Facultate)
-  async gasireFacultate(@Args('id') id: string) {
+  async gasireFacultate(
+    @Args('id') id: string,
+    @RequestUserID() requestingUserId: string,
+  ) {
     try {
       const result = await this.facultateService.gasireFacultate(id);
       if (result) {
-        this.logger.log(`Operatiune executata cu succes.`);
+        this.logger.log(
+          `Operatiunea de ${this.gasireFacultate.name} executata cu succes.`,
+          { requestingUserId: requestingUserId },
+        );
         return result;
       }
     } catch (err) {
@@ -49,11 +58,17 @@ export class FacultateResolver {
   @AuthRequired()
   @isAdmin()
   @Mutation(() => Facultate)
-  async creereFacultate(@Args('facultate') facultate: FacultateCreereInput) {
+  async creereFacultate(
+    @Args('facultate') facultate: FacultateCreereInput,
+    @RequestUserID() requestingUserId: string,
+  ) {
     try {
       const result = await this.facultateService.creereFacultate(facultate);
       if (result) {
-        this.logger.log(`Operatiune executata cu succes.`);
+        this.logger.log(
+          `Operatiunea de ${this.creereFacultate.name} executata cu succes.`,
+          { requestingUserId: requestingUserId },
+        );
         return result;
       }
     } catch (err) {
@@ -65,11 +80,17 @@ export class FacultateResolver {
   @AuthRequired()
   @isAdmin()
   @Mutation(() => FacultateWithoutCursuri)
-  async stergereFacultate(@Args('id') id: string) {
+  async stergereFacultate(
+    @Args('id') id: string,
+    @RequestUserID() requestingUserId: string,
+  ) {
     try {
       const result = await this.facultateService.stergereFacultate(id);
       if (result) {
-        this.logger.log(`Operatiune executata cu succes.`);
+        this.logger.log(
+          `Operatiunea de ${this.stergereFacultate.name} executata cu succes.`,
+          { requestingUserId: requestingUserId },
+        );
         return result;
       }
     } catch (err) {

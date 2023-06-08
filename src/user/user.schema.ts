@@ -10,6 +10,7 @@ export const UserSchema = new mongoose.Schema(
     numarTelefon: { type: String },
     rol: { type: S.Types.ObjectId, ref: 'Rol' },
     parola: { type: String },
+    sters: { type: Boolean },
   },
   { collection: 'useri' },
 );
@@ -40,6 +41,10 @@ export class User extends Document {
   @Prop({ required: true })
   @Field(() => String)
   parola: string;
+
+  @Prop({ default: false })
+  @Field(() => Boolean)
+  sters: boolean;
 }
 
 @ObjectType()
@@ -58,25 +63,27 @@ export class UserFaraParola {
 
   @Field(() => Rol)
   rol: Rol;
+
+  @Field(() => Boolean)
+  sters: boolean;
 }
 
 @ObjectType()
 export class UserWithoutRole {
-  @Prop()
   @Field(() => ID)
   _id: string;
 
-  @Prop({ required: true })
   @Field(() => String)
   nume: string;
 
-  @Prop({ required: true })
   @Field(() => String)
   eMail: string;
 
-  @Prop({ required: true })
   @Field(() => String)
   numarTelefon: string;
+
+  @Field(() => Boolean)
+  sters: boolean;
 }
 
 @InputType()

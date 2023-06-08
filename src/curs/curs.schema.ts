@@ -27,6 +27,7 @@ export const CursSchema = new mongoose.Schema(
         motiv: { type: String },
       },
     ],
+    sters: { type: Boolean },
   },
   { collection: 'cursuri' },
 );
@@ -73,6 +74,10 @@ export class Curs extends Document {
   @Prop({ required: false })
   @Field(() => [StudentAbsent])
   studentiAbsenti?: StudentAbsent[];
+
+  @Prop({ default: false })
+  @Field(() => Boolean)
+  sters: boolean;
 }
 
 @ObjectType()
@@ -124,6 +129,9 @@ export class CursuriWithoutNestedCursuri {
 
   @Field(() => [StudentAbsent])
   studentiAbsenti?: StudentAbsent[];
+
+  @Field(() => Boolean)
+  sters: boolean;
 }
 
 @ObjectType()
@@ -154,6 +162,9 @@ export class CursuriWithoutFacultate {
 
   @Field(() => [StudentAbsent])
   studentiAbsenti?: StudentAbsent[];
+
+  @Field(() => Boolean)
+  sters: boolean;
 }
 
 @InputType()

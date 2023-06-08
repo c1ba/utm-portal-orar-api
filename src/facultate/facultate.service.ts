@@ -18,9 +18,10 @@ export class FacultateService {
   async gasireTotalFacultati() {
     try {
       return await this.facultateModel
-        .find()
+        .find({ sters: false })
         .populate({
           path: 'cursuri',
+          match: { sters: false },
           populate: [
             { path: 'profesorCurs' },
             { path: 'studentiPrezenti' },
@@ -36,9 +37,10 @@ export class FacultateService {
   async creereFacultate(facultate: FacultateCreereInput) {
     try {
       return await (
-        await this.facultateModel.create(facultate)
+        await this.facultateModel.create({ ...facultate, sters: false })
       ).populate({
         path: 'cursuri',
+        match: { sters: false },
         populate: [
           { path: 'profesorCurs' },
           { path: 'studentiPrezenti' },
@@ -56,6 +58,7 @@ export class FacultateService {
         .findById(id)
         .populate({
           path: 'cursuri',
+          match: { sters: false },
           populate: [
             { path: 'profesorCurs' },
             { path: 'studentiPrezenti' },
@@ -63,7 +66,7 @@ export class FacultateService {
           ],
         })
         .exec();
-      if (!facultate) {
+      if (!facultate || facultate.sters) {
         throw new NotFoundException('Facultate Negasita');
       }
       return facultate;
@@ -74,11 +77,16 @@ export class FacultateService {
 
   async stergereFacultate(id: string) {
     try {
-      const result = await this.facultateModel.findByIdAndDelete(id).exec();
+      const result = await this.facultateModel.findByIdAndUpdate(id, {
+        sters: true,
+      });
       if (result) {
-        const stergereCursuriFacultate = await this.cursModel.deleteMany({
-          facultate: id,
-        });
+        const stergereCursuriFacultate = await this.cursModel.updateMany(
+          {
+            facultate: id,
+          },
+          { sters: true },
+        );
         if (stergereCursuriFacultate) {
           return result;
         }

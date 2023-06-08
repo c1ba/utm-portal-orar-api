@@ -13,6 +13,7 @@ export const FacultateSchema = new mongoose.Schema(
   {
     domeniu: { type: String },
     cursuri: [{ type: S.Types.ObjectId, ref: 'Curs' }],
+    sters: { type: Boolean },
   },
   { collection: 'facultati' },
 );
@@ -32,6 +33,10 @@ export class Facultate extends Document {
   @Field(() => [Curs], { nullable: true })
   @Type(() => Curs)
   cursuri?: Curs[];
+
+  @Prop({ default: false })
+  @Field(() => Boolean)
+  sters: boolean;
 }
 
 @ObjectType()
@@ -41,6 +46,9 @@ export class FacultateWithoutCursuri {
 
   @Field(() => String)
   domeniu: string;
+
+  @Field(() => Boolean)
+  sters: boolean;
 }
 
 @ObjectType()
@@ -53,6 +61,9 @@ export class FacultateWithoutNestedFacultate {
 
   @Field(() => [CursuriWithoutFacultate])
   cursuri?: CursuriWithoutFacultate[];
+
+  @Field(() => Boolean)
+  sters: boolean;
 }
 
 @InputType()
@@ -71,6 +82,9 @@ export class FacultateUpdateInput {
 
   @Field(() => [CursWhereInput], { nullable: true })
   cursuri?: CursWhereInput[];
+
+  @Field(() => Boolean, { nullable: true })
+  sters?: boolean;
 }
 
 @InputType()

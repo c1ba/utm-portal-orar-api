@@ -27,7 +27,7 @@ export class CursService {
   async creereCurs(curs: CursCreereInput) {
     try {
       const cursNou = await (
-        await this.cursModel.create(curs)
+        await this.cursModel.create({ ...curs, sters: false })
       ).populate({
         path: 'facultate',
         populate: { path: 'cursuri', populate: { path: 'profesorCurs' } },
@@ -74,7 +74,7 @@ export class CursService {
           },
         })
         .exec();
-      if (!curs) {
+      if (!curs || curs.sters) {
         throw new NotFoundException(`Userul Nu a fost Gasit`);
       }
       return curs;
@@ -170,30 +170,8 @@ export class CursService {
 
   async gasireCursuri(inputCurs: CursFindManyInput) {
     try {
-      const query = {};
-      if (inputCurs.nume) {
-        query['nume'] = inputCurs.nume;
-      }
-      if (inputCurs.anCurs) {
-        query['anCurs'] = inputCurs.anCurs;
-      }
-      if (inputCurs.tipCurs) {
-        query['tipCurs'] = inputCurs.tipCurs;
-      }
-      if (inputCurs.tipPrezentareCurs) {
-        query['tipPrezentareCurs'] = inputCurs.tipPrezentareCurs;
-      }
-      if (inputCurs.datiSustinereCurs) {
-        if (inputCurs.datiSustinereCurs.numarOra) {
-          query['datiSustinereCurs.numarOra'] =
-            inputCurs.datiSustinereCurs.numarOra;
-        }
-        if (inputCurs.datiSustinereCurs.numarZi) {
-          query['datiSustinereCurs.numarZi'] =
-            inputCurs.datiSustinereCurs.numarZi;
-        }
-      }
-      return await this.cursModel
+      const query = { ...inputCurs, sters: false };
+      const result = await this.cursModel
         .find(query)
         .populate([
           {
@@ -212,6 +190,7 @@ export class CursService {
           { path: 'studentiAbsenti' },
         ])
         .exec();
+      return result;
     } catch (err) {
       throw new InternalServerErrorException(err);
     }
@@ -220,7 +199,7 @@ export class CursService {
   async stergereCurs(id: string) {
     try {
       const result = await this.cursModel
-        .findByIdAndDelete(id)
+        .findByIdAndUpdate(id, { sters: true })
         .populate({
           path: 'facultate',
           populate: {

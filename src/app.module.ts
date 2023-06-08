@@ -9,10 +9,21 @@ import { CursModule } from './curs/curs.module';
 import { FacultateModule } from './facultate/facultate.module';
 import { UserModule } from './user/user.module';
 import { DepthLimitPlugin } from './apollo-custom/depth-limit-plugin';
+import { ClsModule } from 'nestjs-cls';
+import { randomUUID } from 'crypto';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    ClsModule.forRoot({
+      global: true,
+      middleware: {
+        mount: true,
+        generateId: true,
+        idGenerator: (req: Request) =>
+          req.headers['X-Request-Id'] ?? randomUUID(),
+      },
+    }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       playground: process.env.NODE_ENV === 'development',

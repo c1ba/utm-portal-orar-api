@@ -49,7 +49,17 @@ export class UserService {
         eMail: user.eMail,
         parola: parolaHashed,
       };
-      const userNou = await this.userModel.create(dateUser);
+      const userExists = await this.userModel
+        .find({ eMail: user.eMail, sters: false })
+        .exec();
+      if (userExists.length > 0 && !userExists[0].sters) {
+        throw new UnauthorizedException('Userul deja exista');
+      }
+
+      const userNou = await this.userModel.create({
+        ...dateUser,
+        sters: false,
+      });
       const dateRol =
         tipRol === 'student'
           ? {
@@ -122,10 +132,13 @@ export class UserService {
 
   async logare(email: string, parola: string) {
     try {
-      const userExists = await this.userModel.find({ eMail: email }).exec();
-      if (!userExists || userExists.length === 0) {
+      const userExists = await this.userModel
+        .find({ eMail: email, sters: false })
+        .exec();
+      if (!userExists || userExists.length === 0 || userExists[0].sters) {
         throw new UnauthorizedException('Userul nu exista');
       }
+
       const parolaHashed = userExists[0].parola;
       const result = await bcrypt.compare(parola, parolaHashed);
       if (!result) {
